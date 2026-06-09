@@ -1,0 +1,26 @@
+@startuml context-dfd
+' DFD Level 0 - Context Diagram
+title Hospital Home-Care System - Context Diagram (DFD Level 0)
+
+skinparam componentStyle rectangle
+left to right direction
+
+actor "End User /\nRelative" as User
+actor "Admin" as Admin
+actor "OAuth Provider\n(Google etc.)" as OAuth
+actor "Nurse / Caregiver" as Nurse
+
+usecase "Hospital\nHome-Care System" as System
+
+User --> System : Login, Book service,\nSpecial demands
+System --> User : Service list, Booking status,\nConfirmation
+
+OAuth --> System : Identity / token
+System --> OAuth : Auth request
+
+System --> Admin : Booking requests + demands
+Admin --> System : Confirm booking,\nAssigned nurse info, Updates
+
+Admin ..> Nurse : Coordinates offline\n(OUTSIDE SYSTEM)
+
+@enduml

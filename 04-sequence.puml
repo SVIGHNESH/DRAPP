@@ -1,0 +1,34 @@
+@startuml sequence
+' Overall Workflow - Sequence Diagram
+title Hospital Home-Care System - Overall Workflow
+
+actor "End User" as U
+participant "App / System" as A
+participant "OAuth" as O
+actor "Admin" as AD
+participant "Nurse (offline)" as N
+
+U -> A : Open app
+A -> O : Request authentication
+O --> A : Identity / token
+A --> U : Logged in + show service catalog
+
+U -> A : Select service, member,\ntime slot, demands
+A -> A : Save booking request
+A --> AD : Notify: new booking request
+
+opt Special demands need clarification
+    AD -> A : Message user
+    A --> U : Relay query
+    U -> A : Respond
+    A --> AD : Relay response
+end
+
+AD --> N : Arrange nurse (OUTSIDE system)
+N --> AD : Confirms availability (offline)
+
+AD -> A : Confirm booking + record assigned nurse
+A --> U : Booking confirmed + nurse details
+A --> U : Service status updates
+
+@enduml

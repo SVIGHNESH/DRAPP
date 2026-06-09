@@ -1,0 +1,34 @@
+@startuml activity
+' Activity Diagram - Booking flow with swimlanes
+title Hospital Home-Care System - Booking Activity Diagram
+
+|End User|
+start
+:Open App;
+if (Logged in?) then (No)
+    repeat
+        :Login via Email / OAuth;
+    repeat while (Auth success?) is (No) not (Yes)
+else (Yes)
+endif
+:View Service Catalog;
+:Select service\n(Post-op / Pre-op / Elderly care);
+:Choose self / family member;
+:Choose time slot (e.g. 8am-8pm);
+:Add special demands (optional);
+:Submit booking request;
+
+|Admin|
+:Receive booking request;
+while (Demands feasible?) is (No)
+    :Contact user to adjust;
+endwhile (Yes)
+:Arrange nurse OFFLINE\n(outside system);
+:Record assigned nurse\n+ confirm booking;
+
+|End User|
+:Notified - booking confirmed;
+:Track service status;
+stop
+
+@enduml

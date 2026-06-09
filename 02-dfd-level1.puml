@@ -1,0 +1,47 @@
+@startuml dfd-level1
+' DFD Level 1 - Processes and Data Stores
+title Hospital Home-Care System - DFD Level 1
+
+skinparam componentStyle rectangle
+
+actor "End User /\nRelative" as User
+actor "Admin" as Admin
+actor "OAuth Provider" as OAuth
+
+usecase "1.0\nAuthenticate User" as P1
+usecase "2.0\nBrowse / Select Service" as P2
+usecase "3.0\nCreate Booking Request" as P3
+usecase "4.0\nReview & Confirm Booking" as P4
+usecase "5.0\nHandle Special Demands" as P5
+usecase "6.0\nTrack Service Status" as P6
+
+database "Users" as D1
+database "Services Catalog" as D2
+database "Bookings" as D3
+
+User --> P1 : email / OAuth
+OAuth <--> P1
+P1 <--> D1
+
+User --> P2
+P2 <--> D2
+P2 --> P3 : selected service
+
+P3 --> D3 : member, time slot
+P3 --> P4 : new request
+
+Admin --> P4
+P4 <--> D3
+P4 --> D3 : assigned nurse info\n(arranged offline)
+P4 --> User : confirmation
+
+User <--> P5
+Admin <--> P5
+P5 --> D3 : notes / requirements
+
+Admin --> P6
+User --> P6
+P6 <--> D3
+P6 --> User : status updates
+
+@enduml

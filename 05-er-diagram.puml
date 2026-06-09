@@ -1,0 +1,74 @@
+@startuml er-diagram
+' ER Diagram - Database Schema
+title Hospital Home-Care System - ER Diagram
+
+skinparam linetype ortho
+
+entity "USER" as USER {
+    * user_id : int <<PK>>
+    --
+    name : string
+    email : string
+    oauth_provider : string
+    oauth_id : string
+    role : string <<user or admin>>
+    created_at : datetime
+}
+
+entity "FAMILY_MEMBER" as FM {
+    * member_id : int <<PK>>
+    --
+    user_id : int <<FK>>
+    name : string
+    age : int
+    relation : string
+    medical_notes : string
+}
+
+entity "SERVICE" as SVC {
+    * service_id : int <<PK>>
+    --
+    name : string <<Post-op / Pre-op / Elderly care>>
+    description : string
+    base_price : decimal
+    active : boolean
+}
+
+entity "BOOKING" as BK {
+    * booking_id : int <<PK>>
+    --
+    user_id : int <<FK>>
+    member_id : int <<FK>>
+    service_id : int <<FK>>
+    slot_start : datetime
+    slot_end : datetime
+    status : string <<requested/confirmed/in_progress/completed/cancelled>>
+    created_at : datetime
+}
+
+entity "BOOKING_NOTE" as BN {
+    * note_id : int <<PK>>
+    --
+    booking_id : int <<FK>>
+    author : string <<user or admin>>
+    message : string
+    created_at : datetime
+}
+
+entity "ASSIGNED_NURSE" as AN {
+    * assignment_id : int <<PK>>
+    --
+    booking_id : int <<FK>>
+    nurse_name : string <<arranged offline by admin>>
+    nurse_contact : string
+    assigned_at : datetime
+}
+
+USER ||--o{ FM : manages
+USER ||--o{ BK : places
+FM ||--o{ BK : "care recipient of"
+SVC ||--o{ BK : "requested in"
+BK ||--o{ BN : "special demands"
+BK ||--o| AN : "fulfilled by"
+
+@enduml
